@@ -22,6 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'getUsers'])->name('getUsers');
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('/getWisata', [GeneralController::class, 'getWisata'])->name('getWisata');
+    Route::post('/getDetailWisata', [GeneralController::class, 'getDetailWisata'])->name('getDetailWisata');
+    Route::post('/listCommentById', [GeneralController::class, 'listCommentById'])->name('listCommentById');
+    Route::post('/addCommentById', [GeneralController::class, 'addCommentById'])->name('addCommentById');
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
