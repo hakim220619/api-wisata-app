@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/getDetailWisata', [GeneralController::class, 'getDetailWisata'])->name('getDetailWisata');
     Route::post('/listCommentById', [GeneralController::class, 'listCommentById'])->name('listCommentById');
     Route::post('/addCommentById', [GeneralController::class, 'addCommentById'])->name('addCommentById');
+    Route::post('/rate', [GeneralController::class, 'rate'])->name('rate');
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

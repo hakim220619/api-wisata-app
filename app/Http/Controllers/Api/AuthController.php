@@ -51,14 +51,9 @@ class AuthController extends Controller
         // dd($request->all());
         $data = [
             'name' => Str::upper($request->name),
-            'nik' => $request->nik,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 2,
-            'address' => $request->address,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'nama_ortu' => $request->nama_ortu,
             'created_at' => now(),
         ];
         // dd($data);
