@@ -26,6 +26,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/listCommentById', [GeneralController::class, 'listCommentById'])->name('listCommentById');
     Route::post('/addCommentById', [GeneralController::class, 'addCommentById'])->name('addCommentById');
     Route::post('/rate', [GeneralController::class, 'rate'])->name('rate');
+    Route::post('/add-wisata', [GeneralController::class, 'addWisata'])->name('addWisata');
+    Route::post('/update-wisata', [GeneralController::class, 'updateWisata'])->name('updateWisata');
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

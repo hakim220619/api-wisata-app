@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class GeneralController extends Controller
 {
@@ -81,5 +82,64 @@ class GeneralController extends Controller
                 'data' => $data,
             ]);
         }
+    }
+    function addWisata(Request $request)
+    {
+
+        $file_path = public_path() . '/storage/images/wisata/' . $request->image;
+        File::delete($file_path);
+        $image = $request->file('image');
+        $filename = $image->getClientOriginalName();
+        $image->move(public_path('storage/images/wisata/'), $filename);
+        $data = [
+            'nama_wisata' => $request->nama_wisata,
+            'keterangan' => $request->keterangan,
+            'description' => $request->description,
+            'image' => $request->file('image')->getClientOriginalName(),
+            'tag' => $request->tag,
+            'tag1' => $request->tag1,
+            'created_at' => now(),
+        ];
+
+        DB::table('wisata')->insert($data);
+        return response()->json([
+            'success' => true,
+            'message' => 'Add Data',
+            'data' => $data,
+        ]);
+    }
+    function updateWisata(Request $request)
+    {
+        if ($request->file('image')) {
+            $file_path = public_path() . '/storage/images/wisata/' . $request->image;
+            File::delete($file_path);
+            $image = $request->file('image');
+            $filename = $image->getClientOriginalName();
+            $image->move(public_path('storage/images/wisata/'), $filename);
+            $data = [
+                'nama_wisata' => $request->nama_wisata,
+                'keterangan' => $request->keterangan,
+                'description' => $request->description,
+                'image' => $request->file('image')->getClientOriginalName(),
+                'tag' => $request->tag,
+                'tag1' => $request->tag1,
+                'created_at' => now(),
+            ];
+        } else {
+            $data = [
+                'nama_wisata' => $request->nama_wisata,
+                'keterangan' => $request->keterangan,
+                'description' => $request->description,
+                'tag' => $request->tag,
+                'tag1' => $request->tag1,
+                'created_at' => now(),
+            ];
+        }
+        DB::table('wisata')->where('id', $request->id)->update($data);
+        return response()->json([
+            'success' => true,
+            'message' => 'Update Data',
+            'data' => $data,
+        ]);
     }
 }
