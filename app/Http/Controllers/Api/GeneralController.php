@@ -120,7 +120,7 @@ class GeneralController extends Controller
                 'nama_wisata' => $request->nama_wisata,
                 'keterangan' => $request->keterangan,
                 'description' => $request->description,
-                'image' => $request->file('image')->getClientOriginalName(),
+                'image' => $filename,
                 'tag' => $request->tag,
                 'tag1' => $request->tag1,
                 'created_at' => now(),
