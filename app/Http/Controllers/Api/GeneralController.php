@@ -110,7 +110,7 @@ class GeneralController extends Controller
     }
     function updateWisata(Request $request)
     {
-        if ($request->file('image')) {
+        if ($request->hasFile('image')) {
             $file_path = public_path() . '/storage/images/wisata/' . $request->image;
             File::delete($file_path);
             $image = $request->file('image');
@@ -123,7 +123,7 @@ class GeneralController extends Controller
                 'image' => $filename,
                 'tag' => $request->tag,
                 'tag1' => $request->tag1,
-                'created_at' => now(),
+                'updated_at' => now(),
             ];
         } else {
             $data = [
@@ -132,7 +132,7 @@ class GeneralController extends Controller
                 'description' => $request->description,
                 'tag' => $request->tag,
                 'tag1' => $request->tag1,
-                'created_at' => now(),
+                'updated_at' => now(),
             ];
         }
         DB::table('wisata')->where('id', $request->id)->update($data);
