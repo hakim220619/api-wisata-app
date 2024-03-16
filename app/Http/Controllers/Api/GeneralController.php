@@ -142,4 +142,16 @@ class GeneralController extends Controller
             'data' => $data,
         ]);
     }
+    function deleteWisata(Request $request)
+    {
+        $getImage = DB::table('wisata')->where('id', $request->id)->first();
+        $file_path = public_path() . '/storage/images/wisata/' . $getImage->image;
+        File::delete($file_path);
+
+        DB::table('wisata')->where('id', $request->id)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Delete Data'
+        ]);
+    }
 }
