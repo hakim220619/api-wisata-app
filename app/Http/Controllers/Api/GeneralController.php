@@ -124,6 +124,7 @@ class GeneralController extends Controller
                 'image' => $filename,
                 'tag' => $request->tag,
                 'tag1' => $request->tag1,
+                'wilayah' => $request->wilayah,
                 'updated_at' => now(),
             ];
         } else {
@@ -133,6 +134,7 @@ class GeneralController extends Controller
                 'description' => $request->description,
                 'tag' => $request->tag,
                 'tag1' => $request->tag1,
+                'wilayah' => $request->wilayah,
                 'updated_at' => now(),
             ];
         }
