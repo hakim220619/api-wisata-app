@@ -98,6 +98,7 @@ class GeneralController extends Controller
             'image' => $request->file('image')->getClientOriginalName(),
             'tag' => $request->tag,
             'tag1' => $request->tag1,
+            'wilayah' => $request->wilayah,
             'created_at' => now(),
         ];
 
