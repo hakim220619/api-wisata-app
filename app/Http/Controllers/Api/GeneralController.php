@@ -111,7 +111,7 @@ class GeneralController extends Controller
     }
     function updateWisata(Request $request)
     {
-        if ($request->hasFile('image') != null) {
+        if ($request->hasFile('image')) {
             $file_path = public_path() . '/storage/images/wisata/' . $request->image;
             File::delete($file_path);
             $image = $request->file('image');
