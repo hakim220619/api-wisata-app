@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/add-wisata', [GeneralController::class, 'addWisata'])->name('addWisata');
     Route::post('/update-wisata', [GeneralController::class, 'updateWisata'])->name('updateWisata');
     Route::post('/delete-wisata', [GeneralController::class, 'deleteWisata'])->name('deleteWisata');
+    Route::post('/deleteComment', [GeneralController::class, 'deleteComment'])->name('deleteComment');
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

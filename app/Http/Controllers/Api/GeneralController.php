@@ -157,4 +157,12 @@ class GeneralController extends Controller
             'message' => 'Delete Data'
         ]);
     }
+    function deleteComment(Request $request)
+    {
+        DB::table('comment')->where('id', $request->id)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Delete Data'
+        ]);
+    }
 }
