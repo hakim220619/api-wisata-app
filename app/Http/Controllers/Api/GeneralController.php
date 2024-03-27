@@ -39,7 +39,6 @@ class GeneralController extends Controller
     function addCommentById(Request $request)
     {
         $data = [
-            'uid' => rand(000, 999),
             'id_wisata' => $request->id_wisata,
             'comment' => $request->comment,
             'id_user' => $request->id_user,
