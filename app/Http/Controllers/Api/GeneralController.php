@@ -110,17 +110,38 @@ class GeneralController extends Controller
     }
     function updateWisata(Request $request)
     {
-        if ($request->hasFile('image')) {
-            $file_path = public_path() . '/storage/images/wisata/' . $request->image;
+        if ($request->hasFile('image4')) {
+            $file_path = public_path() . '/storage/images/wisata/' . $request->image1;
             File::delete($file_path);
-            $image = $request->file('image');
-            $filename = $image->getClientOriginalName();
-            $image->move(public_path('storage/images/wisata/'), $filename);
+            $image = $request->file('image1');
+            $filename1 = $image->getClientOriginalName();
+            $image->move(public_path('storage/images/wisata/'), $filename1);
+
+            $file_path = public_path() . '/storage/images/wisata/' . $request->image2;
+            File::delete($file_path);
+            $image = $request->file('image2');
+            $filename2 = $image->getClientOriginalName();
+            $image->move(public_path('storage/images/wisata/'), $filename2);
+
+            $file_path = public_path() . '/storage/images/wisata/' . $request->image3;
+            File::delete($file_path);
+            $image = $request->file('image3');
+            $filename3 = $image->getClientOriginalName();
+            $image->move(public_path('storage/images/wisata/'), $filename3);
+
+            $file_path = public_path() . '/storage/images/wisata/' . $request->image4;
+            File::delete($file_path);
+            $image = $request->file('image4');
+            $filename4 = $image->getClientOriginalName();
+            $image->move(public_path('storage/images/wisata/'), $filename4);
             $data = [
                 'nama_wisata' => $request->nama_wisata,
                 'keterangan' => $request->keterangan,
                 'description' => $request->description,
-                'image' => $filename,
+                'image1' => $filename1,
+                'image2' => $filename2,
+                'image3' => $filename3,
+                'image4' => $filename4,
                 'tag' => $request->tag,
                 'tag1' => $request->tag1,
                 'wilayah' => $request->wilayah,
@@ -147,8 +168,14 @@ class GeneralController extends Controller
     function deleteWisata(Request $request)
     {
         $getImage = DB::table('wisata')->where('id', $request->id)->first();
-        $file_path = public_path() . '/storage/images/wisata/' . $getImage->image;
-        File::delete($file_path);
+        $file_path1 = public_path() . '/storage/images/wisata/' . $getImage->image1;
+        $file_path2 = public_path() . '/storage/images/wisata/' . $getImage->image2;
+        $file_path3 = public_path() . '/storage/images/wisata/' . $getImage->image3;
+        $file_path4 = public_path() . '/storage/images/wisata/' . $getImage->image4;
+        File::delete($file_path1);
+        File::delete($file_path2);
+        File::delete($file_path3);
+        File::delete($file_path4);
 
         DB::table('wisata')->where('id', $request->id)->delete();
         return response()->json([
