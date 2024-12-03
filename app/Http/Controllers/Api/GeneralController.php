@@ -9,15 +9,65 @@ use Illuminate\Support\Facades\File;
 
 class GeneralController extends Controller
 {
-    function getWisata()
+    function getWisata(Request $request)
     {
-        $data = DB::select("SELECT w.*, (SELECT (sum(r.rate) / COUNT(r.id)) from rate r WHERE r.id_wisata=w.id) as rate FROM wisata w ORDER BY rate DESC");
+        // Ambil data wisata dari database
+        $data = DB::select("SELECT w.*, 
+                                    (SELECT (sum(r.rate) / COUNT(r.id)) FROM rate r WHERE r.id_wisata=w.id) as rate 
+                             FROM wisata w 
+                             ORDER BY rate DESC");
+
+        // Misalnya, kita ingin memberikan rekomendasi berdasarkan kategori dan deskripsi
+        $userPreferences = $request->input('preferences'); // Asumsikan user preferences berupa array kategori atau kata kunci
+
+        // Fungsi untuk menghitung kemiripan menggunakan cosine similarity atau algoritma lain
+        function calculateSimilarity($item1, $item2)
+        {
+            // Misalnya menggunakan metode cosine similarity untuk membandingkan kategori dan deskripsi
+            $similarity = 0;
+
+            // Contoh: membandingkan kategori
+            $commonCategories = array_intersect($item1['kategori'], $item2['kategori']);
+            $similarity += count($commonCategories);
+
+            // Contoh: membandingkan deskripsi menggunakan metode sederhana (misalnya, cosine similarity)
+            // Kamu bisa menggunakan library NLP untuk analisis teks lebih lanjut
+
+            return $similarity;
+        }
+
+        // Tambahkan skor kemiripan untuk setiap objek wisata
+        foreach ($data as &$wisata) {
+            $similarityScores = [];
+
+            foreach ($data as $otherWisata) {
+                if ($wisata->id != $otherWisata->id) {
+                    // Hitung kemiripan antara wisata yang sedang diproses dan wisata lainnya
+                    $similarity = calculateSimilarity($wisata, $otherWisata);
+                    $similarityScores[$otherWisata->id] = $similarity;
+                }
+            }
+
+            // Simpan skor kemiripan di wisata
+            $wisata->similarity_scores = $similarityScores;
+        }
+
+        // Urutkan wisata berdasarkan skor kemiripan dengan preferensi pengguna
+        usort($data, function ($a, $b) use ($userPreferences) {
+            // Misalnya kita memilih wisata dengan skor kemiripan tertinggi
+            $scoreA = calculateSimilarity($userPreferences, $a);
+            $scoreB = calculateSimilarity($userPreferences, $b);
+            return $scoreB - $scoreA; // Urutkan dari yang paling mirip
+        });
+
+        // Kembalikan data wisata beserta rekomendasi
         return response()->json([
             'success' => true,
-            'message' => 'Data Showw',
+            'message' => 'Data Wisata dan Rekomendasi',
             'data' => $data,
         ]);
     }
+
     function getDetailWisata(Request $request)
     {
         $data = DB::select("SELECT w.*, (SELECT (sum(r.rate) / COUNT(r.id)) from rate r WHERE r.id_wisata=w.id) as rate FROM wisata w WHERE w.id = '$request->id_wisata'");
