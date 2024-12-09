@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\File;
 
 class GeneralController extends Controller
 {
+    // function getWisata()
+    // {
+    //     $data = DB::select("SELECT w.*, (SELECT (sum(r.rate) / COUNT(r.id)) from rate r WHERE r.id_wisata=w.id) as rate FROM wisata w ORDER BY rate DESC");
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Data Showw',
+    //         'data' => $data,
+    //     ]);
+    // }
     function getWisata(Request $request)
     {
         // Ambil data wisata dari database
@@ -59,7 +68,6 @@ class GeneralController extends Controller
             $scoreB = calculateSimilarity($userPreferences, $b);
             return $scoreB - $scoreA; // Urutkan dari yang paling mirip
         });
-
         // Kembalikan data wisata beserta rekomendasi
         return response()->json([
             'success' => true,
@@ -79,22 +87,42 @@ class GeneralController extends Controller
     }
     function listCommentById(Request $request)
     {
-        $data = DB::select("select c.*, u.name from comment c, users u where c.id_user=u.id and c.id_wisata = '$request->id_wisata'");
+        $data = DB::select("select c.*, u.name from comment c, users u where c.id_user=u.id and c.id_wisata = '$request->id_wisata' order by c.created_at desc");
         return response()->json([
             'success' => true,
             'message' => 'Data Showw',
             'data' => $data,
         ]);
     }
-    function addCommentById(Request $request)
+
+    public function addCommentById(Request $request)
     {
+        // Validate incoming data
+        $validated = $request->validate([
+            'id_wisata' => 'required|integer',
+            'comment' => 'required|string',
+            'id_user' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
+        ]);
+
+        // Prepare data to insert into the comment table
         $data = [
             'id_wisata' => $request->id_wisata,
             'comment' => $request->comment,
             'id_user' => $request->id_user,
             'created_at' => now(),
         ];
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('images', 'public');
+            $data['image_path'] = $imagePath;
+        }
+
+        // Insert comment data into the database
         DB::table('comment')->insert($data);
+
+        // Return response with success message and data
         return response()->json([
             'success' => true,
             'message' => 'Insert Data',
@@ -135,16 +163,37 @@ class GeneralController extends Controller
     function addWisata(Request $request)
     {
 
-        $file_path = public_path() . '/storage/images/wisata/' . $request->image;
+        $file_path = public_path() . '/storage/images/wisata/' . $request->image1;
         File::delete($file_path);
-        $image = $request->file('image');
-        $filename = $image->getClientOriginalName();
-        $image->move(public_path('storage/images/wisata/'), $filename);
+        $image = $request->file('image1');
+        $filename1 = $image->getClientOriginalName();
+        $image->move(public_path('storage/images/wisata/'), $filename1);
+
+        $file_path = public_path() . '/storage/images/wisata/' . $request->image2;
+        File::delete($file_path);
+        $image = $request->file('image2');
+        $filename2 = $image->getClientOriginalName();
+        $image->move(public_path('storage/images/wisata/'), $filename2);
+
+        $file_path = public_path() . '/storage/images/wisata/' . $request->image3;
+        File::delete($file_path);
+        $image = $request->file('image3');
+        $filename3 = $image->getClientOriginalName();
+        $image->move(public_path('storage/images/wisata/'), $filename3);
+
+        $file_path = public_path() . '/storage/images/wisata/' . $request->image4;
+        File::delete($file_path);
+        $image = $request->file('image4');
+        $filename4 = $image->getClientOriginalName();
+        $image->move(public_path('storage/images/wisata/'), $filename4);
         $data = [
             'nama_wisata' => $request->nama_wisata,
             'keterangan' => $request->keterangan,
             'description' => $request->description,
-            'image' => $request->file('image')->getClientOriginalName(),
+            'image1' => $filename1,
+            'image2' => $filename2,
+            'image3' => $filename3,
+            'image4' => $filename4,
             'tag' => $request->tag,
             'tag1' => $request->tag1,
             'wilayah' => $request->wilayah,
